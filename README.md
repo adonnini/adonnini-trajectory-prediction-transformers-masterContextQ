@@ -1,6 +1,6 @@
 
 ## Set up
-a) Create a working directory to hold the contents of ```adonnini-trajectory-prediction-transformers-masterContextQ```
+a) Create a working directory to hold the contents of this ```adonnini-trajectory-prediction-transformers-masterContextQ``` repository.
 
 b) Add executorch to the working directory following the instructions in
 https://pytorch.org/executorch/stable/getting-started-setup.html
