@@ -6,11 +6,11 @@ b) Add executorch to the working directory following the instructions in
 https://pytorch.org/executorch/stable/getting-started-setup.html
 
 c) In the executorch directory, run the following commands to install pacakges necessary in order to train the model
-pip install wheel
-python3 setup.py bdist_wheel
-pip install -U pip setuptools ruamel-yaml pyyaml PyYaml
-pip install matplotlib scikit-learn scipy pydantic
-pip install scipy geopandas pygeos transformers gensim
+- pip install wheel
+- python3 setup.py bdist_wheel
+- pip install -U pip setuptools ruamel-yaml pyyaml PyYaml
+- pip install matplotlib scikit-learn scipy pydantic
+- pip install scipy geopandas pygeos transformers gensim
 
 ## Running the Training Loop and Executorch Model Export
 1. Create a \models folder in the working directory.
