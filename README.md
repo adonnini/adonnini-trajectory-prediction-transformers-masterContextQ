@@ -21,7 +21,7 @@ Validation after every epoch has been disabled as it intefered with torchscript 
 ## Notes - Please Read
 i) I am new to Python. Please bear in this mind as you will probably find some (many) of the things I did not "professional"
 
-ii) ```train-minimum.py``` is (very) messy. There are many lines which are commented out. They are iethr instructions, notes, or code which I tried and disabled because it did not work. I am sorry as this will make navigating/understanding train-minimum.py (more) difficult to navigate.
+ii) ```train-minimum.py``` is (very) messy. I have been using it as a sandbox. There are many lines which are commented out. They are either instructions, notes, or code which I tried and disabled because it did not work, or code I used to test some ideas which I abandoned. I am sorry as this will make navigating/understanding train-minimum.py (more) difficult to navigate.
 
 iii) Although they should work, I did not test the instructions in this ```readme.md``` file. However I did run ```train-minimum.py``` on my system in a working direcotry set up as described above producing the execution failure as described in
 https://github.com/pytorch/executorch/issues/1350
