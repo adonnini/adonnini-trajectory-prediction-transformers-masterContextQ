@@ -358,8 +358,7 @@ if __name__ == "__main__":
         dec_source_mask_tuple = tuple(dec_source_mask)
         dec_target_mask_tuple = tuple(dec_target_mask)
         # tuple(map(tuple, data_trg))
-        # ACTIVATE IN ORDER TO RUN EXECUTTORCH - END - \/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/
-
+        
         # exported_program: torch.export.ExportedProgram = export(m, (ENC_INPUT, DEC_INPUT, DEC_SOURCE_MASK, DEC_TARGET_MASK))
         # print(exported_program)
 
@@ -388,7 +387,6 @@ if __name__ == "__main__":
         #         dynamic_dim(dec_target_mask, 0) == dynamic_dim(enc_input, 0),
         #         ]
 
-        # ACTIVATE IN ORDER TO RUN EXECUTTORCH - START - \/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/
         constraints = [
             dynamic_dim(enc_input_tensor, 0),
             dynamic_dim(dec_input, 0),
@@ -398,7 +396,6 @@ if __name__ == "__main__":
             dynamic_dim(dec_source_mask, 0) == dynamic_dim(enc_input, 0),
             dynamic_dim(dec_target_mask, 0) == dynamic_dim(enc_input, 0),
         ]
-        # ACTIVATE IN ORDER TO RUN EXECUTTORCH - END - \/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/
 
         # constraints = [
         # # First dimension of each input is a dynamic batch size
@@ -424,7 +421,6 @@ if __name__ == "__main__":
         # edge_program: exir.EdgeProgramManager = exir.to_edge(aten_dialect)
         # executorch_program: exir.ExecutorchProgramManager = edge_program.to_executorch()
 
-        # ACTIVATE IN ORDER TO RUN EXECUTTORCH - START - \/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/
         # FROM https://pytorch.org/executorch/stable/tutorials/export-to-executorch-tutorial.html#lowering-the-whole-module - START
         # ================================================================================
         # Delegating to a Backend - Lowering the Whole Module
