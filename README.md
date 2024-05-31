@@ -19,7 +19,7 @@ c) In the executorch directory, run the following commands to install packages n
 Validation after every epoch has been disabled as it intefered with torchscript execution (when torchscript was enabled).
 
 ## Notes - Please Read
-i) I am new to Python. Please bear in this mind as you will probably find some (many) of the things I did not "professional"
+i) I am new to Python. Please bear in this mind as you will probably find some (many) of the things I did amateurish/beginner.
 
 ii) ```train-minimum.py``` is (very) messy. I have been using it as a sandbox. There are many lines which are commented out. They are either instructions, notes, or code which I tried and disabled because it did not work, or code I used to test some ideas which I abandoned. I am sorry as this will make navigating/understanding train-minimum.py (more) difficult to navigate.
 
