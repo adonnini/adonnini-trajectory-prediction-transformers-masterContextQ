@@ -26,4 +26,8 @@ ii) ```train-minimum.py``` is (very) messy. I have been using it as a sandbox. T
 iii) Although they should work, I did not test the instructions in this ```README.md``` file. However I did run ```train-minimum.py``` on my system in a working direcotry set up as described above producing the execution failure as described in
 https://github.com/pytorch/executorch/issues/1350
   
+iV) The executorch related code starts her
+https://github.com/adonnini/adonnini-trajectory-prediction-transformers-masterContextQ/blob/d4715f1f2e5a3da1f6d7224ead8f1fd25f9d8e65/train-minimum.py#L333C11-L333C54
+and
+ends here
 
