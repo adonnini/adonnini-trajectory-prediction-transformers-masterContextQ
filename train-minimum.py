@@ -5,7 +5,7 @@ Script to perform model training
 import torch
 import torch.nn.functional as F
 from torch._export import capture_pre_autograd_graph
-from torch.export import export, ExportedProgram, dynamic_dim
+from torch.export import export, ExportedProgram   #, dynamic_dim
 from torch.export import Dim
 from tqdm import tqdm
 import numpy as np
@@ -56,21 +56,21 @@ def get_random_inputs(self):
     return (train_dataset)
 
 
-def specify_constraints(enc_input, dec_input, dec_source_mask, dec_target_mask):
-    return [
-        dynamic_dim(enc_input_tensor, 0),
-        dynamic_dim(dec_input, 0),
-        dynamic_dim(dec_source_mask, 0),
-        dynamic_dim(dec_target_mask, 0),
-        # dec_input:
-        dynamic_dim(dec_input, 0) == dynamic_dim(enc_input, 0),
-
-        # dec_source_mask:
-        dynamic_dim(dec_source_mask, 0) == dynamic_dim(enc_input, 0),
-
-        # dec_target_mask:
-        dynamic_dim(dec_target_mask, 0) == dynamic_dim(enc_input, 0),
-    ]
+# def specify_constraints(enc_input, dec_input, dec_source_mask, dec_target_mask):
+#     return [
+#         dynamic_dim(enc_input_tensor, 0),
+#         dynamic_dim(dec_input, 0),
+#         dynamic_dim(dec_source_mask, 0),
+#         dynamic_dim(dec_target_mask, 0),
+#         # dec_input:
+#         dynamic_dim(dec_input, 0) == dynamic_dim(enc_input, 0),
+#
+#         # dec_source_mask:
+#         dynamic_dim(dec_source_mask, 0) == dynamic_dim(enc_input, 0),
+#
+#         # dec_target_mask:
+#         dynamic_dim(dec_target_mask, 0) == dynamic_dim(enc_input, 0),
+#     ]
 
 
 if __name__ == "__main__":
@@ -387,15 +387,15 @@ if __name__ == "__main__":
         #         dynamic_dim(dec_target_mask, 0) == dynamic_dim(enc_input, 0),
         #         ]
 
-        constraints = [
-            dynamic_dim(enc_input_tensor, 0),
-            dynamic_dim(dec_input, 0),
-            dynamic_dim(dec_source_mask, 0),
-            dynamic_dim(dec_target_mask, 0),
-            dynamic_dim(dec_input, 0) == dynamic_dim(enc_input, 0),
-            dynamic_dim(dec_source_mask, 0) == dynamic_dim(enc_input, 0),
-            dynamic_dim(dec_target_mask, 0) == dynamic_dim(enc_input, 0),
-        ]
+        # constraints = [
+        #     dynamic_dim(enc_input_tensor, 0),
+        #     dynamic_dim(dec_input, 0),
+        #     dynamic_dim(dec_source_mask, 0),
+        #     dynamic_dim(dec_target_mask, 0),
+        #     dynamic_dim(dec_input, 0) == dynamic_dim(enc_input, 0),
+        #     dynamic_dim(dec_source_mask, 0) == dynamic_dim(enc_input, 0),
+        #     dynamic_dim(dec_target_mask, 0) == dynamic_dim(enc_input, 0),
+        # ]
 
         # constraints = [
         # # First dimension of each input is a dynamic batch size
