@@ -471,16 +471,19 @@ if __name__ == "__main__":
         # )
 
         # pre_autograd_aten_dialect = capture_pre_autograd_graph(m,
-        #                                                        (enc_input, dec_input, dec_source_mask, dec_target_mask), dynamic_shapes=dynamic_shapes)
-        aten_dialect: ExportedProgram = export(pre_autograd_aten_dialect,
-                                               (enc_input, dec_input, dec_source_mask, dec_target_mask), strict=False)
+        #(enc_input, dec_input, dec_source_mask, dec_target_mask), dynamic_shapes=dynamic_shapes)
+
+        # aten_dialect: ExportedProgram = export(pre_autograd_aten_dialect,
+        #                                        (enc_input, dec_input, dec_source_mask, dec_target_mask), strict=False)
+
         # pre_autograd_aten_dialect = capture_pre_autograd_graph(m, (enc_input, dec_input, dec_source_mask, dec_target_mask), constraints=constraints)
         # aten_dialect: ExportedProgram = export(pre_autograd_aten_dialect, (enc_input, dec_input, dec_source_mask, dec_target_mask), constraints=constraints)
 
-        print(" - train_minimum - Lowering the Whole Module - ATen Dialect Graph")
-        print(" - train_minimum - Lowering the Whole Module - aten_dialect - ", aten_dialect)
+        # print(" - train_minimum - Lowering the Whole Module - ATen Dialect Graph")
+        # print(" - train_minimum - Lowering the Whole Module - aten_dialect - ", aten_dialect)
 
-        edge_program: EdgeProgramManager = to_edge(aten_dialect)
+        edge_program: EdgeProgramManager = to_edge(pre_autograd_aten_dialect)
+        # edge_program: EdgeProgramManager = to_edge(aten_dialect)
         to_be_lowered_module = edge_program.exported_program()
 
         from executorch.exir.backend.backend_api import LoweredBackendModule, to_backend
