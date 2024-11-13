@@ -435,6 +435,11 @@ if __name__ == "__main__":
         dim1_x = Dim("dim1_x", min=1, max=100000)
         dynamic_shapes = {"enc_input": {1: dim1_x}, "dec_input": {1: dim1_x}, "dec_source_mask": {1: dim1_x}, "dec_target_mask": {1: dim1_x}}
 
+        print(" - train_minimum - Lowering the Whole Module - enc_input - ", enc_input)
+        print(" - train_minimum - Lowering the Whole Module - dec_input - ", dec_input)
+        print(" - train_minimum - Lowering the Whole Module - dec_source_mask - ", dec_source_mask)
+        print(" - train_minimum - Lowering the Whole Module - dec_target_mask - ", dec_target_mask)
+
         print(" - train_minimum - Lowering the Whole Module - enc_input.shape - ", enc_input.shape)
         print(" - train_minimum - Lowering the Whole Module - dec_input.shape - ", dec_input.shape)
         print(" - train_minimum - Lowering the Whole Module - dec_source_mask.shape - ", dec_source_mask.shape)
