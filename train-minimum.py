@@ -433,7 +433,11 @@ if __name__ == "__main__":
         from torch.export import _trace
 
         dim1_x = Dim("dim1_x", min=1, max=100000)
-        dynamic_shapes = {"enc_input": {1: dim1_x}, "dec_input": {1: dim1_x}, "dec_source_mask": {1: dim1_x}, "dec_target_mask": {1: dim1_x}}
+
+        dynamic_shapes = {"enc_input": {1: Dim.AUTO}, "dec_input": {1: Dim.AUTO}, "dec_source_mask": {1: Dim.AUTO}, "dec_target_mask": {1: Dim.AUTO}}
+        # dynamic_shapes = {"enc_input": {1: dim1_x}, "dec_input": {1: dim1_x}, "dec_source_mask": {1: dim1_x}, "dec_target_mask": {1: dim1_x}}
+        # Dim.AUTO: dynamic_shapes = {"enc_input": {1: Dim.AUTO}, "dec_input": {1: Dim.AUTO},
+        #                             "dec_source_mask": {1: Dim.AUTO}, "dec_target_mask": {1: Dim.AUTO}}
 
         print(" - train_minimum - Lowering the Whole Module - enc_input - ", enc_input)
         print(" - train_minimum - Lowering the Whole Module - dec_input - ", dec_input)
@@ -445,13 +449,27 @@ if __name__ == "__main__":
         print(" - train_minimum - Lowering the Whole Module - dec_source_mask.shape - ", dec_source_mask.shape)
         print(" - train_minimum - Lowering the Whole Module - dec_target_mask.shape - ", dec_target_mask.shape)
 
-        pre_autograd_aten_dialect = torch.export._trace._export(
+        # ep = torch.export.export(
+        #     m,
+        #     (enc_input, dec_input, dec_source_mask, dec_target_mask),
+        #     dynamic_shapes=dynamic_shapes,
+        #     strict=False
+        # )
+
+        pre_autograd_aten_dialect = torch.export.export(
             m,
             (enc_input, dec_input, dec_source_mask, dec_target_mask),
             dynamic_shapes=dynamic_shapes,
-            pre_dispatch=True,
             strict=False
         )
+        # pre_autograd_aten_dialect = torch.export._trace._export(
+        #     m,
+        #     (enc_input, dec_input, dec_source_mask, dec_target_mask),
+        #     dynamic_shapes=dynamic_shapes,
+        #     pre_dispatch=True,
+        #     strict=False
+        # )
+
         # pre_autograd_aten_dialect = capture_pre_autograd_graph(m,
         #                                                        (enc_input, dec_input, dec_source_mask, dec_target_mask), dynamic_shapes=dynamic_shapes)
         aten_dialect: ExportedProgram = export(pre_autograd_aten_dialect,
