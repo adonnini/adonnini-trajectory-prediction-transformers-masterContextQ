@@ -508,7 +508,8 @@ if __name__ == "__main__":
         # Serialize and save it to a file
         save_path = save_path = "/home/adonnini1/Development/ContextQSourceCode/NeuralNetworks/trajectory-prediction-transformers-master/models/tpt_delegate.pte"
         with open(save_path, "wb") as f:
-            f.write(lowered_module.to_executorch().buffer)
+            f.write(lowered_module.to_executorch(ExecutorchBackendConfig(remove_view_copy=False)).buffer)
+            # f.write(lowered_module.to_executorch().buffer)
 
     #================================================================================
 #FROM https://pytorch.org/executorch/stable/tutorials/export-to-executorch-tutorial.html#lowering-the-whole-module - END
