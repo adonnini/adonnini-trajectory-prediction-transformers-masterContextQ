@@ -5,7 +5,7 @@ Script to perform model training
 import torch
 import torch.nn.functional as F
 from torch._export import capture_pre_autograd_graph
-from torch.export import export, ExportedProgram, dynamic_dim
+from torch.export import export, ExportedProgram   #, dynamic_dim
 from torch.export import Dim
 from tqdm import tqdm
 import numpy as np
@@ -56,21 +56,21 @@ def get_random_inputs(self):
     return (train_dataset)
 
 
-def specify_constraints(enc_input, dec_input, dec_source_mask, dec_target_mask):
-    return [
-        dynamic_dim(enc_input_tensor, 0),
-        dynamic_dim(dec_input, 0),
-        dynamic_dim(dec_source_mask, 0),
-        dynamic_dim(dec_target_mask, 0),
-        # dec_input:
-        dynamic_dim(dec_input, 0) == dynamic_dim(enc_input, 0),
-
-        # dec_source_mask:
-        dynamic_dim(dec_source_mask, 0) == dynamic_dim(enc_input, 0),
-
-        # dec_target_mask:
-        dynamic_dim(dec_target_mask, 0) == dynamic_dim(enc_input, 0),
-    ]
+# def specify_constraints(enc_input, dec_input, dec_source_mask, dec_target_mask):
+#     return [
+#         dynamic_dim(enc_input_tensor, 0),
+#         dynamic_dim(dec_input, 0),
+#         dynamic_dim(dec_source_mask, 0),
+#         dynamic_dim(dec_target_mask, 0),
+#         # dec_input:
+#         dynamic_dim(dec_input, 0) == dynamic_dim(enc_input, 0),
+#
+#         # dec_source_mask:
+#         dynamic_dim(dec_source_mask, 0) == dynamic_dim(enc_input, 0),
+#
+#         # dec_target_mask:
+#         dynamic_dim(dec_target_mask, 0) == dynamic_dim(enc_input, 0),
+#     ]
 
 
 if __name__ == "__main__":
@@ -387,15 +387,15 @@ if __name__ == "__main__":
         #         dynamic_dim(dec_target_mask, 0) == dynamic_dim(enc_input, 0),
         #         ]
 
-        constraints = [
-            dynamic_dim(enc_input_tensor, 0),
-            dynamic_dim(dec_input, 0),
-            dynamic_dim(dec_source_mask, 0),
-            dynamic_dim(dec_target_mask, 0),
-            dynamic_dim(dec_input, 0) == dynamic_dim(enc_input, 0),
-            dynamic_dim(dec_source_mask, 0) == dynamic_dim(enc_input, 0),
-            dynamic_dim(dec_target_mask, 0) == dynamic_dim(enc_input, 0),
-        ]
+        # constraints = [
+        #     dynamic_dim(enc_input_tensor, 0),
+        #     dynamic_dim(dec_input, 0),
+        #     dynamic_dim(dec_source_mask, 0),
+        #     dynamic_dim(dec_target_mask, 0),
+        #     dynamic_dim(dec_input, 0) == dynamic_dim(enc_input, 0),
+        #     dynamic_dim(dec_source_mask, 0) == dynamic_dim(enc_input, 0),
+        #     dynamic_dim(dec_target_mask, 0) == dynamic_dim(enc_input, 0),
+        # ]
 
         # constraints = [
         # # First dimension of each input is a dynamic batch size
@@ -432,35 +432,70 @@ if __name__ == "__main__":
         torch._logging._init_logs()
         from torch.export import _trace
 
-        dim1_x = Dim("dim1_x", min=1, max=100000)
-        dynamic_shapes = {"enc_input": {1: dim1_x}, "dec_input": {1: dim1_x}, "dec_source_mask": {1: dim1_x}, "dec_target_mask": {1: dim1_x}}
+        enc_input_dim1 = Dim("enc_input_dim1", min=1, max=100000)
+        dec_input_dim1 = Dim("dec_input_dim1", min=1, max=100000)
+        dec_source_mask_dim1 = Dim("dec_source_mask_dim1", min=1, max=100000)
+        dec_target_mask_dim1 = Dim("dec_target_mask_dim1", min=1, max=100000)
+        dynamic_shapes = {"enc_input": {1: enc_input_dim1}, "dec_input": {1: dec_input_dim1},
+                          "dec_source_mask": {1: dec_source_mask_dim1}, "dec_target_mask": {1: dec_target_mask_dim1}}
+
+        # dim1_x = Dim("dim1_x", min=2, max=100000)
+        # dim1_x = Dim("dim1_x", min=1, max=100000)
+
+        # dynamic_shapes = {"enc_input": {1: Dim.AUTO}, "dec_input": {1: Dim.AUTO}, "dec_source_mask": {1: Dim.AUTO}, "dec_target_mask": {1: Dim.AUTO}}
+        # dynamic_shapes = {"enc_input": {1: dim1_x}, "dec_input": {1: dim1_x}, "dec_source_mask": {1: dim1_x}, "dec_target_mask": {1: dim1_x}}
+        # Dim.AUTO: dynamic_shapes = {"enc_input": {1: Dim.AUTO}, "dec_input": {1: Dim.AUTO},
+        #                             "dec_source_mask": {1: Dim.AUTO}, "dec_target_mask": {1: Dim.AUTO}}
+
+        print(" - train_minimum - Lowering the Whole Module - enc_input - ", enc_input)
+        print(" - train_minimum - Lowering the Whole Module - dec_input - ", dec_input)
+        print(" - train_minimum - Lowering the Whole Module - dec_source_mask - ", dec_source_mask)
+        print(" - train_minimum - Lowering the Whole Module - dec_target_mask - ", dec_target_mask)
 
         print(" - train_minimum - Lowering the Whole Module - enc_input.shape - ", enc_input.shape)
         print(" - train_minimum - Lowering the Whole Module - dec_input.shape - ", dec_input.shape)
         print(" - train_minimum - Lowering the Whole Module - dec_source_mask.shape - ", dec_source_mask.shape)
         print(" - train_minimum - Lowering the Whole Module - dec_target_mask.shape - ", dec_target_mask.shape)
 
-        pre_autograd_aten_dialect = torch.export._trace._export(
+        # ep = torch.export.export(
+        #     m,
+        #     (enc_input, dec_input, dec_source_mask, dec_target_mask),
+        #     dynamic_shapes=dynamic_shapes,
+        #     strict=False
+        # )
+
+        pre_autograd_aten_dialect = torch.export.export(
             m,
             (enc_input, dec_input, dec_source_mask, dec_target_mask),
             dynamic_shapes=dynamic_shapes,
-            pre_dispatch=True,
             strict=False
         )
+        # pre_autograd_aten_dialect = torch.export._trace._export(
+        #     m,
+        #     (enc_input, dec_input, dec_source_mask, dec_target_mask),
+        #     dynamic_shapes=dynamic_shapes,
+        #     pre_dispatch=True,
+        #     strict=False
+        # )
+
         # pre_autograd_aten_dialect = capture_pre_autograd_graph(m,
-        #                                                        (enc_input, dec_input, dec_source_mask, dec_target_mask), dynamic_shapes=dynamic_shapes)
-        aten_dialect: ExportedProgram = export(pre_autograd_aten_dialect,
-                                               (enc_input, dec_input, dec_source_mask, dec_target_mask), strict=False)
+        #(enc_input, dec_input, dec_source_mask, dec_target_mask), dynamic_shapes=dynamic_shapes)
+
+        # aten_dialect: ExportedProgram = export(pre_autograd_aten_dialect,
+        #                                        (enc_input, dec_input, dec_source_mask, dec_target_mask), strict=False)
+
         # pre_autograd_aten_dialect = capture_pre_autograd_graph(m, (enc_input, dec_input, dec_source_mask, dec_target_mask), constraints=constraints)
         # aten_dialect: ExportedProgram = export(pre_autograd_aten_dialect, (enc_input, dec_input, dec_source_mask, dec_target_mask), constraints=constraints)
 
-        print(" - train_minimum - Lowering the Whole Module - ATen Dialect Graph")
-        print(" - train_minimum - Lowering the Whole Module - aten_dialect - ", aten_dialect)
+        # print(" - train_minimum - Lowering the Whole Module - ATen Dialect Graph")
+        # print(" - train_minimum - Lowering the Whole Module - aten_dialect - ", aten_dialect)
 
-        edge_program: EdgeProgramManager = to_edge(aten_dialect)
+        edge_program: EdgeProgramManager = to_edge(pre_autograd_aten_dialect)
+        # edge_program: EdgeProgramManager = to_edge(aten_dialect)
         to_be_lowered_module = edge_program.exported_program()
 
         from executorch.exir.backend.backend_api import LoweredBackendModule, to_backend
+        from executorch.exir import EdgeProgramManager, ExecutorchProgramManager, to_edge_transform_and_lower
 
         # Lower the module
         # lowered_module: torch.fx.GraphModule = to_backend(to_be_lowered_module, XnnpackPartitioner())
@@ -470,7 +505,12 @@ if __name__ == "__main__":
         #     XnnpackPartitioner(), to_be_lowered_module, []
         # )
 
-        # print(" - train_minimum - Lowering the Whole Module - pre_autograd_aten_dialect - ", pre_autograd_aten_dialect)
+        # edge: EdgeProgramManager = to_edge_transform_and_lower(
+        #     exported_program,
+        #     partitioner=[XnnpackPartitioner()],
+        # )
+
+            # print(" - train_minimum - Lowering the Whole Module - pre_autograd_aten_dialect - ", pre_autograd_aten_dialect)
         # print(" - train_minimum - Lowering the Whole Module - aten_dialect - ", aten_dialect)
         # print(" - train_minimum - Lowering the Whole Module - edge_program - ", edge_program)
         # print(" - train_minimum - Lowering the Whole Module - to_be_lowered_module - ", to_be_lowered_module)
@@ -482,7 +522,10 @@ if __name__ == "__main__":
         # Serialize and save it to a file
         save_path = save_path = "/home/adonnini1/Development/ContextQSourceCode/NeuralNetworks/trajectory-prediction-transformers-master/models/tpt_delegate.pte"
         with open(save_path, "wb") as f:
-            f.write(lowered_module.to_executorch().buffer)
+            # f.write(edge_program.to_executorch().buffer)
+            # f.write(edge_program.to_executorch(ExecutorchBackendConfig(remove_view_copy=False)).buffer)
+            f.write(lowered_module.to_executorch(ExecutorchBackendConfig(remove_view_copy=False)).buffer)
+            # f.write(lowered_module.to_executorch().buffer)
 
     #================================================================================
 #FROM https://pytorch.org/executorch/stable/tutorials/export-to-executorch-tutorial.html#lowering-the-whole-module - END
